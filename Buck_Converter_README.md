@@ -1,17 +1,17 @@
 # ⚡ Classical Buck DC-DC Converter (30V → 15V, 30W, 50kHz)
 
-> Mini Project — BEEE301L Power Electronics | VIT Chennai | Winter Semester 2025-26  
+> Mini Project — BEEE301L Power Electronics | VIT Chennai | Winter Semester 2025-26
 > Faculty: Dr. M. Prabhakar | Batch No: 19
 
 ---
 
 ## 📌 Overview
 
-A classical Buck (step-down) DC-DC converter designed to convert a 30V input to a regulated 15V output at 30W, switching at 50kHz. The project covers the complete design flow — from mathematical design and MATLAB/Simulink simulation to PCB fabrication using KiCad.
+A classical Buck (step-down) DC-DC converter designed to convert a 30V input to a regulated 15V output at 30W, switching at 50kHz. The project covers the complete design flow — mathematical design, MATLAB/Simulink simulation, LTspice verification, and PCB fabrication using KiCad 9.0.
 
 ---
 
-## ⚙️ Technical Specifications
+## ⚙️ Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -27,97 +27,75 @@ A classical Buck (step-down) DC-DC converter designed to convert a 30V input to 
 
 ## 🔩 Components
 
-| Component | Part Number | Rating |
-|-----------|-------------|--------|
-| MOSFET (Switch) | IRF540N | 100V, 33A |
-| Diode (Freewheeling) | MBR1060 | 60V, 10A |
+| Component | Part | Rating |
+|-----------|------|--------|
+| MOSFET | IRF540N | 100V, 33A |
+| Diode | MBR1060 | 60V, 10A |
 | Gate Driver | TLP250 | Opto-isolated |
 | Inductor | Coilcraft RFB0810-221L | 220 µH |
-| Output Capacitor | Nichicon UPM1E100MHD | 10 µF / 25V |
-| Load Resistance | — | 7.5 Ω |
-| PWM Source | Arduino | 50kHz PWM |
+| Capacitor | Nichicon UPM1E100MHD | 10 µF / 25V |
+| Load | — | 7.5 Ω |
+| PWM Source | Arduino | 50kHz via Timer1 |
 
 ---
 
 ## 📐 Design Equations
 
-**Duty Cycle:**
 ```
-D = Vout / Vin = 15 / 30 = 0.5
-```
+Duty Cycle:   D = Vout / Vin = 15 / 30 = 0.5
 
-**Inductor value (CCM):**
-```
-L = (Vin - Vout) × D / (ΔiL × f)
-  = (30 - 15) × 0.5 / (ΔiL × 50000)
-  → Selected: 220 µH
-```
+Inductor:     L = (Vin - Vout) × D / (ΔiL × f)  →  220 µH selected
 
-**Output Capacitor:**
-```
-C = ΔiL / (8 × f × ΔVout)
-  → Selected: 10 µF
+Capacitor:    C = ΔiL / (8 × f × ΔVout)  →  10 µF selected
 ```
 
 ---
 
-## 💻 MATLAB/Simulink Simulation
+## 💻 Simulation
 
-The circuit was simulated in MATLAB/Simulink to verify:
+Simulated in **MATLAB/Simulink** and **LTspice** to verify:
 - Output voltage regulation at 15V
 - Inductor current waveform in CCM
-- Output voltage ripple
-- MOSFET switching behaviour
+- Output voltage ripple under load
+- MOSFET switching transitions
 
-📁 Simulation files are in the `/simulation` folder.
+📁 Simulation files → `/simulation/`
 
-**To run:**
-1. Open MATLAB (R2023a or later recommended)
-2. Open `buck_converter_simulation.slx` in Simulink
-3. Run the simulation (Ctrl+T)
-4. View output voltage and inductor current on the scope blocks
+**To run MATLAB/Simulink model:**
+1. Open MATLAB (R2023a or later)
+2. Open `buck_converter_simulation.slx`
+3. Run simulation (Ctrl+T) and view scope blocks
 
 ---
 
 ## 🖥️ PCB Design (KiCad 9.0)
 
-The PCB was designed using KiCad 9.0 with attention to:
-- Power trace width (calculated for 2A current)
+Designed with attention to:
+- Power trace width calculated for 2A
 - Ground plane for noise reduction
+- Short gate drive traces to minimise switching noise
 - Component placement for thermal management
-- Short gate drive traces to minimize switching noise
 
-📁 KiCad project files are in the `/pcb` folder.
+📁 KiCad files → `/pcb/`
 
-**Files included:**
-- `buck_converter.kicad_pro` — Project file
-- `buck_converter.kicad_sch` — Schematic
-- `buck_converter.kicad_pcb` — PCB layout
-- `gerber/` — Gerber files for fabrication
-
-**PCB Status:** Fabricated ✅ | Tested ❌ (pending)
+**PCB status:** Fabricated ✅ | Tested ❌ (pending)
 
 ---
 
 ## 🔌 Arduino PWM Gate Drive
 
-The 50kHz PWM signal for the gate driver is generated using Arduino:
-
 ```cpp
-// Buck Converter Gate Drive — 50kHz PWM
-// Arduino generates PWM on pin 9
+// 50kHz PWM via Timer1 on Pin 9
+// 16MHz / (1 × (319+1)) = 50kHz
 
 void setup() {
-  // Set Timer1 for 50kHz fast PWM on pin 9
   TCCR1A = _BV(COM1A1) | _BV(WGM11);
-  TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS10); // No prescaler
-  ICR1 = 319;        // 16MHz / 50kHz - 1 = 319
-  OCR1A = 159;       // 50% duty cycle (319 / 2 = ~159)
+  TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS10);
+  ICR1  = 319;   // Sets 50kHz
+  OCR1A = 159;   // 50% duty cycle
 }
 
-void loop() {
-  // PWM runs automatically via Timer1
-}
+void loop() { } // Timer1 runs autonomously
 ```
 
 ---
@@ -128,10 +106,8 @@ void loop() {
 buck-dc-dc-converter/
 ├── README.md
 ├── simulation/
-│   ├── buck_converter_simulation.slx    ← MATLAB/Simulink model
-│   └── simulation_results/
-│       ├── output_voltage.png
-│       └── inductor_current.png
+│   ├── buck_converter_simulation.slx   ← MATLAB/Simulink
+│   └── buck_converter.asc              ← LTspice
 ├── pcb/
 │   ├── buck_converter.kicad_pro
 │   ├── buck_converter.kicad_sch
@@ -147,25 +123,22 @@ buck-dc-dc-converter/
 
 ## 📚 Key Learnings
 
-- Buck converter operation in Continuous Conduction Mode (CCM)
-- How duty cycle controls output voltage in DC-DC converters
-- Inductor and capacitor design using standard equations
-- MOSFET switching behaviour and freewheeling diode operation
-- PCB design considerations for power electronics circuits
-- PWM signal generation using Arduino Timer registers
+- Buck converter operation in CCM and duty cycle control
+- Inductor and capacitor design from equations
+- MATLAB/Simulink and LTspice simulation workflows
+- PCB design: trace width, ground planes, layout for power electronics
+- Timer register programming in Arduino for precise PWM
 
 ---
 
 ## 👥 Team
 
-| Name | Register No. |
-|------|-------------|
+| Name | Reg. No. |
+|------|----------|
 | Sanjay Kumar G | 24BEE1256 |
 | Selva Krishna SJ | 24BEE1017 |
 
 ---
 
-## 👨‍💻 Author
-
-**Sanjay Kumar G** | B.Tech EEE, VIT Chennai  
-[LinkedIn](https://www.linkedin.com/in/sanjay-kumar-g-933073333) · [GitHub](https://github.com/gsanjaykumar26sk-eng) · gsanjaykumar26sk@gmail.com
+**Sanjay Kumar G** · B.Tech EEE, VIT Chennai  
+[LinkedIn](https://www.linkedin.com/in/sanjay-kumar-g-933073333) · [GitHub](https://github.com/gsanjaykumar26sk-eng)

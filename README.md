@@ -1,17 +1,17 @@
-# ⚡ Classical Buck DC-DC Converter (30V → 15V, 30W, 50kHz)
+#  Classical Buck DC-DC Converter (30V → 15V, 30W, 50kHz)
 
 > Mini Project — BEEE301L Power Electronics | VIT Chennai | Winter Semester 2025-26
 > Faculty: Dr. M. Prabhakar | Batch No: 19
 
 ---
 
-## 📌 Overview
+## Overview
 
 A classical Buck (step-down) DC-DC converter designed to convert a 30V input to a regulated 15V output at 30W, switching at 50kHz. The project covers the complete design flow — mathematical design, MATLAB/Simulink simulation, LTspice verification, and PCB fabrication using KiCad 9.0.
 
 ---
 
-## ⚙️ Specifications
+##  Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -39,7 +39,7 @@ A classical Buck (step-down) DC-DC converter designed to convert a 30V input to 
 
 ---
 
-## 📐 Design Equations
+##  Design Equations
 
 ```
 Duty Cycle:   D = Vout / Vin = 15 / 30 = 0.5
@@ -51,7 +51,7 @@ Capacitor:    C = ΔiL / (8 × f × ΔVout)  →  10 µF selected
 
 ---
 
-## 💻 Simulation
+##  Simulation
 
 Simulated in **MATLAB/Simulink** and **LTspice** to verify:
 - Output voltage regulation at 15V
@@ -59,7 +59,7 @@ Simulated in **MATLAB/Simulink** and **LTspice** to verify:
 - Output voltage ripple under load
 - MOSFET switching transitions
 
-📁 Simulation files → `/simulation/`
+ Simulation files → `/simulation/`
 
 **To run MATLAB/Simulink model:**
 1. Open MATLAB (R2023a or later)
@@ -68,7 +68,7 @@ Simulated in **MATLAB/Simulink** and **LTspice** to verify:
 
 ---
 
-## 🖥️ PCB Design (KiCad 9.0)
+##  PCB Design (KiCad 9.0)
 
 Designed with attention to:
 - Power trace width calculated for 2A
@@ -76,13 +76,13 @@ Designed with attention to:
 - Short gate drive traces to minimise switching noise
 - Component placement for thermal management
 
-📁 KiCad files → `/pcb/`
+ KiCad files → `/pcb/`
 
-**PCB status:** Fabricated ✅ | Tested ❌ (pending)
+**PCB status:** Fabricated  | Tested  (pending)
 
 ---
 
-## 🔌 Arduino PWM Gate Drive
+##  Arduino PWM Gate Drive
 
 ```cpp
 // 50kHz PWM via Timer1 on Pin 9
@@ -100,7 +100,7 @@ void loop() { } // Timer1 runs autonomously
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 buck-dc-dc-converter/
@@ -121,7 +121,7 @@ buck-dc-dc-converter/
 
 ---
 
-## 📚 Key Learnings
+##  Key Learnings
 
 - Buck converter operation in CCM and duty cycle control
 - Inductor and capacitor design from equations
@@ -131,7 +131,7 @@ buck-dc-dc-converter/
 
 ---
 
-## 👥 Team
+##  Team
 
 | Name | Reg. No. |
 |------|----------|

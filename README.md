@@ -1,7 +1,7 @@
 #  Classical Buck DC-DC Converter (30V → 15V, 30W, 50kHz)
 
 > Mini Project — BEEE301L Power Electronics | VIT Chennai | Winter Semester 2025-26
-> Faculty: Dr. M. Prabhakar | Batch No: 19
+> Faculty: Dr. M. Prabhakar 
 
 ---
 
@@ -25,7 +25,7 @@ A classical Buck (step-down) DC-DC converter designed to convert a 30V input to 
 
 ---
 
-## 🔩 Components
+##  Components
 
 | Component | Part | Rating |
 |-----------|------|--------|
